@@ -24,8 +24,8 @@ export default function QueryProcessor(query: string): string {
     }
     const subMatch = lower.match(/what is (\d+) minus (\d+)/);
     if (subMatch) {
-        const a = parseInt(plusMatch[1], 10);
-        const b = parseInt(plusMatch[2], 10);
+        const a = parseInt(subMatch[1], 10);
+        const b = parseInt(subMatch[2], 10);
         return String(a - b);
     }
 
