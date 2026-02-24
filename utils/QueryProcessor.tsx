@@ -15,7 +15,7 @@ export default function QueryProcessor(query: string): string {
     return "kzt";
   }
 
-  // Addition: "What is 53 plus 53?"
+  // addiotion case
   const plusMatch = lower.match(/what is (\d+) plus (\d+)/);
   if (plusMatch) {
     const a = parseInt(plusMatch[1], 10);
@@ -23,17 +23,21 @@ export default function QueryProcessor(query: string): string {
     return String(a + b);
   }
 
-  // Largest number: "Which of the following numbers is the largest: 36, 19, 1?"
+  //largest number
   const largestMatch = lower.match(/largest: ([\d,\s]+)/);
   if (largestMatch) {
-    const numbers = largestMatch[1]
-      .split(",")
-      .map(n => parseInt(n.trim(), 10));
+    const numbers = largestMatch[1].split(",").map(n => parseInt(n.trim(), 10));
 
     return String(Math.max(...numbers));
   }
+  const multiplyMatch = lower.match(/what is (\d+) multiplied by (\d+)/);
+    if (multiplyMatch) {
+    const a = parseInt(multiplyMatch[1], 10);
+    const b = parseInt(multiplyMatch[2], 10);
+    return String(a * b);
+    }
 
-  // Name fallback
+  // name
   if (lower.includes("name")) {
     return "kzt";
   }
