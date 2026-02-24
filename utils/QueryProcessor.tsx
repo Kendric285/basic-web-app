@@ -15,26 +15,32 @@ export default function QueryProcessor(query: string): string {
         return "kzt";
     }
 
-    // addiotion case
-    // Addition (single or chained): "What is 73 plus 29?" or "What is 59 plus 55 plus 37?"
-    const addMatch = lower.match(/^what is (\d+(?:\s+plus\s+\d+)+)\?$/);
-    if (addMatch) {
-    const nums = addMatch[1].split(/\s+plus\s+/).map(s => parseInt(s, 10));
-    const sum = nums.reduce((acc, n) => acc + n, 0);
-    return String(sum);
-    }
-    const subMatch = lower.match(/what is (\d+) minus (\d+)/);
-    if (subMatch) {
-        const a = parseInt(subMatch[1], 10);
-        const b = parseInt(subMatch[2], 10);
-        return String(a - b);
-    }
-    const powerMatch = lower.match((/what is (\d+) to the power of (\d+)/));
-    if(powerMatch){
-        const a = parseInt(powerMatch[1], 10);
-        const b = parseInt(powerMatch[2], 10);
-        return String(a**b);
-    }
+    // Generic arithmetic handler
+const arithmeticMatch = lower.match(/^what is (.+)\?$/);
+if (arithmeticMatch) {
+  let expr = arithmeticMatch[1];
+
+  // Replace words with operators
+  expr = expr
+    .replace(/plus/g, "+")
+    .replace(/minus/g, "-")
+    .replace(/multiplied by/g, "*")
+    .replace(/times/g, "*")
+    .replace(/divided by/g, "/");
+
+  // Remove anything unsafe (only allow digits and operators)
+  if (!/^[\d+\-*/\s.]+$/.test(expr)) {
+    return "";
+  }
+
+  try {
+    // Evaluate safely
+    const result = Function(`"use strict"; return (${expr})`)();
+    return String(result);
+  } catch {
+    return "";
+  }
+}
 
     //largest number
     const largestMatch = lower.match(/largest: ([\d,\s]+)/);
@@ -43,12 +49,7 @@ export default function QueryProcessor(query: string): string {
 
         return String(Math.max(...numbers));
     }
-    const multiplyMatch = lower.match(/what is (\d+) multiplied by (\d+)/);
-    if (multiplyMatch) {
-        const a = parseInt(multiplyMatch[1], 10);
-        const b = parseInt(multiplyMatch[2], 10);
-        return String(a * b);
-    }
+
 
     // name
     if (lower.includes("name")) {
