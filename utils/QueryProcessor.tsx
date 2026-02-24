@@ -1,17 +1,41 @@
 export default function QueryProcessor(query: string): string {
-  if (query.toLowerCase().includes("shakespeare")) {
+  const lower = query.toLowerCase().trim();
+
+  // Shakespeare
+  if (lower.includes("shakespeare")) {
     return (
       "William Shakespeare (26 April 1564 - 23 April 1616) was an " +
       "English poet, playwright, and actor, widely regarded as the greatest " +
       "writer in the English language and the world's pre-eminent dramatist."
     );
   }
-  if (query.includes("What is your Andrew ID?")){
-    return ("kzt");
+
+  // Andrew ID
+  if (lower.includes("andrew id")) {
+    return "kzt";
   }
 
-  if (query.toLowerCase().includes("name")) {
-    return ("kzt");
+  // Addition: "What is 53 plus 53?"
+  const plusMatch = lower.match(/what is (\d+) plus (\d+)/);
+  if (plusMatch) {
+    const a = parseInt(plusMatch[1], 10);
+    const b = parseInt(plusMatch[2], 10);
+    return String(a + b);
+  }
+
+  // Largest number: "Which of the following numbers is the largest: 36, 19, 1?"
+  const largestMatch = lower.match(/largest: ([\d,\s]+)/);
+  if (largestMatch) {
+    const numbers = largestMatch[1]
+      .split(",")
+      .map(n => parseInt(n.trim(), 10));
+
+    return String(Math.max(...numbers));
+  }
+
+  // Name fallback
+  if (lower.includes("name")) {
+    return "kzt";
   }
 
   return "";
