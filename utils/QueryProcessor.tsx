@@ -50,15 +50,22 @@ export default function QueryProcessor(query: string): string {
     // Both square and cube
     const squareCubeMatch = lower.match(/both a square and a cube: ([\d,\s]+)/);
     if (squareCubeMatch) {
-        const numbers = squareCubeMatch[1].split(",").map(n => parseInt(n.trim(), 10));
-        for (const num of numbers) {
-            const sqrt = Math.sqrt(num);
-            const cbrt = Math.cbrt(num);
+    const numbers = squareCubeMatch[1]
+        .split(",")
+        .map(n => parseInt(n.trim(), 10));
 
-            if (Number.isInteger(sqrt) && Number.isInteger(cbrt)) {
-                return String(num);
-            }
+    const results: number[] = [];
+
+    for (const num of numbers) {
+        const sqrt = Math.sqrt(num);
+        const cbrt = Math.cbrt(num);
+
+        if (Number.isInteger(sqrt) && Number.isInteger(cbrt)) {
+        results.push(num);
         }
+    }
+
+    return results.join(", ");
     }
     // Prime numbers
     const primeMatch = lower.match(/primes: ([\d,\s]+)/);
