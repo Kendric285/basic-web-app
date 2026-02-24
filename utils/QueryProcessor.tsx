@@ -29,6 +29,12 @@ export default function QueryProcessor(query: string): string {
         const b = parseInt(subMatch[2], 10);
         return String(a - b);
     }
+    const powerMatch = lower.match((/what is (\d+) to the power of (\d+)/));
+    if(powerMatch){
+        const a = parseInt(powerMatch[1], 10);
+        const b = parseInt(powerMatch[2], 10);
+        return String(a**b);
+    }
 
     //largest number
     const largestMatch = lower.match(/largest: ([\d,\s]+)/);
