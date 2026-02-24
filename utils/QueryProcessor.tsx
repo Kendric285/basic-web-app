@@ -22,6 +22,12 @@ export default function QueryProcessor(query: string): string {
         const b = parseInt(plusMatch[2], 10);
         return String(a + b);
     }
+    const subMatch = lower.match(/what is (\d+) minus (\d+)/);
+    if (plusMatch) {
+        const a = parseInt(plusMatch[1], 10);
+        const b = parseInt(plusMatch[2], 10);
+        return String(a - b);
+    }
 
     //largest number
     const largestMatch = lower.match(/largest: ([\d,\s]+)/);
@@ -44,18 +50,34 @@ export default function QueryProcessor(query: string): string {
     // Both square and cube
     const squareCubeMatch = lower.match(/both a square and a cube: ([\d,\s]+)/);
     if (squareCubeMatch) {
-    const numbers = squareCubeMatch[1]
+        const numbers = squareCubeMatch[1].split(",").map(n => parseInt(n.trim(), 10));
+        for (const num of numbers) {
+            const sqrt = Math.sqrt(num);
+            const cbrt = Math.cbrt(num);
+
+            if (Number.isInteger(sqrt) && Number.isInteger(cbrt)) {
+                return String(num);
+            }
+        }
+    }
+    // Prime numbers
+    const primeMatch = lower.match(/primes: ([\d,\s]+)/);
+    if (primeMatch) {
+    const numbers = primeMatch[1]
         .split(",")
         .map(n => parseInt(n.trim(), 10));
 
-    for (const num of numbers) {
-        const sqrt = Math.sqrt(num);
-        const cbrt = Math.cbrt(num);
-
-        if (Number.isInteger(sqrt) && Number.isInteger(cbrt)) {
-        return String(num);
+    const isPrime = (num: number): boolean => {
+        if (num < 2) return false;
+        for (let i = 2; i <= Math.sqrt(num); i++) {
+        if (num % i === 0) return false;
         }
-    }
+        return true;
+    };
+
+    const primes = numbers.filter(isPrime);
+
+    return primes.join(", ");
     }
 
     return "";
