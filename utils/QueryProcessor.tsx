@@ -16,11 +16,12 @@ export default function QueryProcessor(query: string): string {
     }
 
     // addiotion case
-    const plusMatch = lower.match(/what is (\d+) plus (\d+)/);
-    if (plusMatch) {
-        const a = parseInt(plusMatch[1], 10);
-        const b = parseInt(plusMatch[2], 10);
-        return String(a + b);
+    // Addition (single or chained): "What is 73 plus 29?" or "What is 59 plus 55 plus 37?"
+    const addMatch = lower.match(/^what is (\d+(?:\s+plus\s+\d+)+)\?$/);
+    if (addMatch) {
+    const nums = addMatch[1].split(/\s+plus\s+/).map(s => parseInt(s, 10));
+    const sum = nums.reduce((acc, n) => acc + n, 0);
+    return String(sum);
     }
     const subMatch = lower.match(/what is (\d+) minus (\d+)/);
     if (subMatch) {
