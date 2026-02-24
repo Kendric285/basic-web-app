@@ -23,7 +23,7 @@ export default function QueryProcessor(query: string): string {
         return String(a + b);
     }
     const subMatch = lower.match(/what is (\d+) minus (\d+)/);
-    if (plusMatch) {
+    if (subMatch) {
         const a = parseInt(plusMatch[1], 10);
         const b = parseInt(plusMatch[2], 10);
         return String(a - b);
